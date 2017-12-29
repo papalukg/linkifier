@@ -37,6 +37,7 @@ public class DataSourceFactory {
 				dataSource.setPortNumber(Integer.valueOf(properties.getProperty("port")));
 				dataSource.setUser(properties.getProperty("username"));
 				dataSource.setPassword(password);
+                                dataSource.setDriverType("thin");
 				return dataSource;
 			}
 			case "PostgreSQL": {

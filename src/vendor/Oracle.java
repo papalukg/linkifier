@@ -10,9 +10,13 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import main.Schema;
 
 public class Oracle implements Vendor {
 
+        private final static Logger LOGGER = Logger.getLogger(Schema.class.getName());
+        
 	public void getTableStatistics(String databaseName, String schemaName, List<Table> tables, Connection connection) throws SQLException {
 		String query = "select TABLE_NAME, NUM_ROWS from ALL_TABLES where OWNER = '" + schemaName + "'";
 
@@ -166,11 +170,12 @@ public class Oracle implements Vendor {
 		     ResultSet rs = stmt.executeQuery(query)) {
 			while (rs.next()) {
 				Table table = tableMap.get(rs.getString(1));
+                                if (table == null) continue;
 				Column column = table.getColumn(rs.getString(2));
-				column.setUniqueRatio(rs.getDouble(3) / column.getRowCount());
+				column.setUniqueRatio(column.getRowCount() == 0 ? 0 : rs.getDouble(3) / column.getRowCount());
 				column.setTextMin(rs.getString(4));
 				column.setTextMax(rs.getString(5));
-				column.setNullRatio(rs.getDouble(6) / column.getRowCount());
+				column.setNullRatio(column.getRowCount() == 0 ? 0 :rs.getDouble(6) / column.getRowCount());
 				column.setWidthAvg(rs.getDouble(7));
 			}
 		}
