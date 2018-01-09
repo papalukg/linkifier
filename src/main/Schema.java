@@ -14,14 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class Schema {
 
 	private final static Logger LOGGER = Logger.getLogger(Schema.class.getName());
 	private static final int MAX_HEAP_SIZE = 2000;  // Defines how many FK constraint candidates to keep
 
-	public static List<Table> getPrimaryKeys(Connection connection, String databaseName, String schemaName) throws SQLException {
-		List<Table> tables = getTables(connection.getMetaData(), databaseName, schemaName);
+	public static List<Table> getPrimaryKeys(Connection connection, String databaseName, String schemaName, String tableNamePattern) throws SQLException {
+
+		List<Table> tables = getTables(connection.getMetaData(), databaseName, schemaName, tableNamePattern);
 
 		Vendor vendor = VendorFactory.getVendor(connection.getMetaData().getDatabaseProductName());
 		vendor.getTableStatistics(databaseName, schemaName, tables, connection);
@@ -58,14 +60,17 @@ public class Schema {
 		}
 	}
 
-	private static List<Table> getTables(DatabaseMetaData metaData, String databaseName, String schemaName) throws SQLException {
+	private static List<Table> getTables(DatabaseMetaData metaData, String databaseName, String schemaName, String tableNamePattern) throws SQLException {
 		List<Table> tables = new ArrayList<>();
 		String[] types = {"TABLE"};
 
+		Pattern p = Pattern.compile(tableNamePattern);
+
+		// Table name pattern does not seem to work
 		try (ResultSet result = metaData.getTables(databaseName, schemaName, null, types)) {
 			while (result.next()) {
 				String tableName = result.getString("TABLE_NAME");
-				if (tableName.contains("$")) continue;      // QUICK WORKAROUND: Skip misbehaving tables in KOS database, should permit some filtering
+				if (tableName.contains("$") || !p.matcher(tableName).matches()) continue;      // QUICK WORKAROUND: Skip misbehaving tables in KOS database, should permit some filtering
 				Table table = new Table(databaseName, tableName);   // We pass databaseName in place of schemaName because of MySQL
 				table.getColumns(metaData, databaseName, schemaName, tableName);
 				table.getPrimaryKeys(metaData, databaseName, schemaName, tableName);

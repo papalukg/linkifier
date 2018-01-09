@@ -15,6 +15,7 @@ import java.util.List;
 public class Linkifier {
 	private final Connection connection;
 	private final String schemaName;
+	private final String tableNamePattern;
 	private final char leftQuote;
 	private final char rightQuote;
 	private List<Table> tables;
@@ -25,9 +26,10 @@ public class Linkifier {
 	// Note: The constructor could directly call private estimatePk() and estimateFk().
 	// That way we could be sure no one gets null-pointer exception just because they forgot to call these
 	// two methods in the correct order.
-	public Linkifier(Connection connection, String schemaName) throws SQLException {
+	public Linkifier(Connection connection, String schemaName, String tableNamePattern) throws SQLException {
 		this.connection = connection;
 		this.schemaName = schemaName;
+		this.tableNamePattern = tableNamePattern;
 
 		String identifierQuote = "\"\"";
 		identifierQuote = connection.getMetaData().getIdentifierQuoteString();
@@ -41,7 +43,7 @@ public class Linkifier {
 
 	// Estimation
 	public void estimatePk() throws SQLException {
-		tables = Schema.getPrimaryKeys(connection, connection.getCatalog(), schemaName);
+		tables = Schema.getPrimaryKeys(connection, connection.getCatalog(), schemaName, tableNamePattern);
 		tables = Optimization.optimize(tables);
 	}
 

@@ -358,13 +358,14 @@ public class Relationship implements Comparable<Relationship> {
 		}
 
 		// If the FK column contains only nulls, assume true
-		if (fk.getNullRatio() != null && fk.getNullRatio() == 1.0) {
+		if (fk.getNullRatio() != null && fk.getNullRatio() >= 0.999) {
 			return true;
 		}
 
 		// Fail-safe
 		// Possible reason for this: missing statistics for the table
 		LOGGER.info("We failed to compute 'inRange' feature for: " + this + " Was statistics collected on these columns?");
+//		LOGGER.info("fk.getNullRatio() = " + Double.toString(fk.getNullRatio()));
 		return true;    // I am optimistic...
 	}
 

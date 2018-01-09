@@ -15,7 +15,7 @@ import main.Schema;
 
 public class Oracle implements Vendor {
 
-        private final static Logger LOGGER = Logger.getLogger(Schema.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(Schema.class.getName());
         
 	public void getTableStatistics(String databaseName, String schemaName, List<Table> tables, Connection connection) throws SQLException {
 		String query = "select TABLE_NAME, NUM_ROWS from ALL_TABLES where OWNER = '" + schemaName + "'";
@@ -28,11 +28,16 @@ public class Oracle implements Vendor {
 		try (Statement stmt = connection.createStatement();
 		     ResultSet rs = stmt.executeQuery(query)) {
 			while (rs.next()) {
-				for (Column column : map.get(rs.getString(1)).getColumnList()) {
+				Table table = map.get(rs.getString(1));
+				if (table == null) continue;
+				for (Column column : table.getColumnList()) {
+					if (column == null) continue;
 					column.setEstimatedRowCount(rs.getInt(2));
 				}
 			}
 		}
+
+		LOGGER.info("Table statistics collected successfully");
 	}
 
 	// Note when comparing to financial dataset from MySQL:
@@ -160,7 +165,7 @@ public class Oracle implements Vendor {
 				"\t\t\t\tend";
 
 		query = "select TABLE_NAME, COLUMN_NAME, NUM_DISTINCT, " + decodeLow + " LOW_VALUE, " + decodeHigh + " HIGH_VALUE, NUM_NULLS, AVG_COL_LEN from SYS.ALL_TAB_COLUMNS where OWNER = '" + schemaName + "'";
-
+		
 		Map<String, Table> tableMap = new HashMap<>();
 		for (Table table : tables) {
 			tableMap.put(table.getName(), table);
@@ -170,7 +175,8 @@ public class Oracle implements Vendor {
 		     ResultSet rs = stmt.executeQuery(query)) {
 			while (rs.next()) {
 				Table table = tableMap.get(rs.getString(1));
-                                if (table == null) continue;
+				if (table == null) continue;
+
 				Column column = table.getColumn(rs.getString(2));
 				column.setUniqueRatio(column.getRowCount() == 0 ? 0 : rs.getDouble(3) / column.getRowCount());
 				column.setTextMin(rs.getString(4));
@@ -180,6 +186,7 @@ public class Oracle implements Vendor {
 			}
 		}
 
+        LOGGER.info("Column statistics collected successfully");
 		// Output quality control (if something turns sour, we want to know about that)
 		QualityControl.qcNumericalValues(tables);
 	}

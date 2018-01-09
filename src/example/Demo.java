@@ -27,7 +27,7 @@ public class Demo {
 		try (Connection connection = dataSource.getConnection()){
 
 			// Estimate the PK and FK
-			List<Table> tables = Schema.getPrimaryKeys(connection, databaseName, schemaName);
+			List<Table> tables = Schema.getPrimaryKeys(connection, databaseName, schemaName, null);
 			tables = Optimization.optimize(tables);
 			List<Relationship> relationships = Schema.getRelationships(connection, databaseName, schemaName, tables, false);
 			OptimizationRelationship.optimize(relationships, tables);

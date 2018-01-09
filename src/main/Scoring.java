@@ -28,7 +28,7 @@ public class Scoring {
 		try (Connection connection = Setting.getDataSource().getConnection()) {
 			LOGGER.info("Successfully connected to the database.");
 			identifierQuote = connection.getMetaData().getIdentifierQuoteString();
-			tables = Schema.getPrimaryKeys(connection, databaseName, schemaName);
+			tables = Schema.getPrimaryKeys(connection, databaseName, schemaName, null);
 			tables = Optimization.optimize(tables);
 			relationships = Schema.getRelationships(connection, databaseName, schemaName, tables, false);
 		} catch (Exception e) {

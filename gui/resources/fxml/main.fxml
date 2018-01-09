@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Events">
     <left>
-        <TilePane orientation="VERTICAL" prefRows="7" prefTileHeight="57.0" prefTileWidth="170.0"
+        <TilePane orientation="VERTICAL" prefRows="9" prefTileHeight="63.0" prefTileWidth="170.0"
                   prefWidth="200.0" tileAlignment="TOP_LEFT" BorderPane.alignment="CENTER">
             <padding>
                 <Insets left="14.0" top="10.0"/>
@@ -36,6 +36,14 @@
                 <TextField fx:id="textPort"/>
             </VBox>
             <VBox>
+                <Label text="Service name">
+                    <padding>
+                        <Insets bottom="3.0"/>
+                    </padding>
+                </Label>
+                <TextField fx:id="textServicename"/>
+            </VBox>
+            <VBox>
                 <Label text="Database name">
                     <padding>
                         <Insets bottom="3.0"/>
@@ -50,6 +58,14 @@
                     </padding>
                 </Label>
                 <TextField fx:id="textSchema"/>
+            </VBox>
+            <VBox>
+                <Label text="Table name pattern">
+                    <padding>
+                        <Insets bottom="3.0"/>
+                    </padding>
+                </Label>
+                <TextField fx:id="textTablenamepattern"/>
             </VBox>
             <VBox>
                 <Label text="User name">

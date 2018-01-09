@@ -48,10 +48,11 @@ public class TrainingRelationship {
 
 				while (result.next()) {
 					String schemaName = result.getString(1);
+					String tableNamePattern = null;
 					System.out.println(schemaName);
 
 					// Get tables
-					List<Table> tables = Schema.getPrimaryKeys(connection, schemaName, null);
+					List<Table> tables = Schema.getPrimaryKeys(connection, schemaName, schemaName, tableNamePattern);
 					tables = Optimization.optimize(tables);
 
 					// Get relations

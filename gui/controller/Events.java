@@ -41,7 +41,9 @@ public class Events implements Initializable {
 	@FXML private TextField textHost;
 	@FXML private TextField textPort;
 	@FXML private TextField textDatabase;
+	@FXML private TextField textServicename;
 	@FXML private TextField textSchema;
+	@FXML private TextField textTablenamepattern;
 	@FXML private TextField textUsername;
 	@FXML private TextField textPassword;
 	@FXML private ComboBox<String> comboBoxVendor;
@@ -63,6 +65,8 @@ public class Events implements Initializable {
 		properties.setProperty("host", textHost.getText());
 		properties.setProperty("port", textPort.getText());
 		properties.setProperty("database", textDatabase.getText());
+		properties.setProperty("servicename", textServicename.getText());
+		properties.setProperty("tablenamepattern", textTablenamepattern.getText());
 		properties.setProperty("schema", textSchema.getText());
 		properties.setProperty("username", textUsername.getText());
 		writeProperties(properties);
@@ -150,6 +154,8 @@ public class Events implements Initializable {
 		textHost.setText(properties.getProperty("host", "relational.fit.cvut.cz"));
 		textPort.setText(properties.getProperty("port", "3306"));
 		textDatabase.setText(properties.getProperty("database", "financial"));
+		textServicename.setText(properties.getProperty("servicename", ""));
+		textTablenamepattern.setText(properties.getProperty("tablenamepattern", ""));
 		textSchema.setText(properties.getProperty("schema", ""));
 		textUsername.setText(properties.getProperty("username", "guest"));
 		if ("relational.fit.cvut.cz".equals(textHost.getText())) {
@@ -204,7 +210,7 @@ public class Events implements Initializable {
 						if (isCancelled()) return null;
 
 						LOGGER.info("Successfully connected to the database.");
-						linkifier = new Linkifier(connection, properties.getProperty("schema"));
+						linkifier = new Linkifier(connection, properties.getProperty("schema"), properties.getProperty("tablenamepattern"));
 						if (isCancelled()) return null;
 
 						linkifier.estimatePk();

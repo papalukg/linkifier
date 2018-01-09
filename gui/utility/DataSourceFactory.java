@@ -35,9 +35,11 @@ public class DataSourceFactory {
 				dataSource.setServerName(properties.getProperty("host"));
 				dataSource.setDatabaseName(properties.getProperty("database"));
 				dataSource.setPortNumber(Integer.valueOf(properties.getProperty("port")));
+				if (properties.getProperty("servicename") != "")
+					dataSource.setServiceName(properties.getProperty("servicename"));
 				dataSource.setUser(properties.getProperty("username"));
 				dataSource.setPassword(password);
-                                dataSource.setDriverType("thin");
+				dataSource.setDriverType("thin");
 				return dataSource;
 			}
 			case "PostgreSQL": {

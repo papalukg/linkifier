@@ -28,8 +28,9 @@ public class Training {
 				writer.println(Table.getHeader());
 				while (result.next()) {
 					String schemaName = result.getString(1);
+					String tableNamePattern = null;
 					System.out.println(schemaName);
-					List<Table> tables = Schema.getPrimaryKeys(connection, schemaName, null);
+					List<Table> tables = Schema.getPrimaryKeys(connection, schemaName, schemaName, tableNamePattern);
 //					tables = Schema.getExpensiveFeatures(tables, connection, schemaName);
 
 					for (Table table : tables) {
