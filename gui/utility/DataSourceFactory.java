@@ -35,7 +35,7 @@ public class DataSourceFactory {
 				dataSource.setServerName(properties.getProperty("host"));
 				dataSource.setDatabaseName(properties.getProperty("database"));
 				dataSource.setPortNumber(Integer.valueOf(properties.getProperty("port")));
-				if (properties.getProperty("servicename") != "")
+				if (properties.getProperty("servicename").length() > 0)
 					dataSource.setServiceName(properties.getProperty("servicename"));
 				dataSource.setUser(properties.getProperty("username"));
 				dataSource.setPassword(password);

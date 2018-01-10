@@ -70,7 +70,7 @@ public class Schema {
 		try (ResultSet result = metaData.getTables(databaseName, schemaName, null, types)) {
 			while (result.next()) {
 				String tableName = result.getString("TABLE_NAME");
-				if (tableName.contains("$") || !p.matcher(tableName).matches()) continue;      // QUICK WORKAROUND: Skip misbehaving tables in KOS database, should permit some filtering
+				if (tableName.contains("$") || (tableNamePattern.length() > 0 && !p.matcher(tableName).matches())) continue;      // QUICK WORKAROUND: Skip misbehaving tables in KOS database, should permit some filtering
 				Table table = new Table(databaseName, tableName);   // We pass databaseName in place of schemaName because of MySQL
 				table.getColumns(metaData, databaseName, schemaName, tableName);
 				table.getPrimaryKeys(metaData, databaseName, schemaName, tableName);
