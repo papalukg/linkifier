@@ -2,6 +2,7 @@ package utility;
 
 import javafx.scene.control.TextArea;
 
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;
 
@@ -29,6 +30,8 @@ public class TextAreaAppender extends StreamHandler {
 	public synchronized void publish(LogRecord record) {
 		super.publish(record);
 		flush();
+		// Printing debug messages in gui's text area causes applications to hang
+		if (!(record.getLevel() == Level.INFO ||record.getLevel() == Level.WARNING || record.getLevel() == Level.SEVERE)) return;
 		javafx.application.Platform.runLater( () -> textArea.appendText(getFormatter().format(record)) );
 	}
 

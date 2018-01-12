@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.lang.Math.*;
@@ -364,8 +365,8 @@ public class Relationship implements Comparable<Relationship> {
 
 		// Fail-safe
 		// Possible reason for this: missing statistics for the table
-		LOGGER.info("We failed to compute 'inRange' feature for: " + this + " Was statistics collected on these columns?");
-//		LOGGER.info("fk.getNullRatio() = " + Double.toString(fk.getNullRatio()));
+		LOGGER.log(Level.FINEST,"We failed to compute 'inRange' feature for: " + this + " Was statistics collected on these columns?");
+
 		return true;    // I am optimistic...
 	}
 
