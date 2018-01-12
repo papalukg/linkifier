@@ -1,9 +1,7 @@
 package utility;
 
-import com.sun.media.jfxmedia.logging.Logger;
 import javafx.scene.control.TextArea;
 
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;
 
@@ -29,11 +27,9 @@ public class TextAreaAppender extends StreamHandler {
 	 */
 	@Override
 	public synchronized void publish(LogRecord record) {
-	    // Application hangs otherwise
 		super.publish(record);
-        flush();
-        if (!(record.getLevel() == Level.INFO || record.getLevel() == Level.WARNING || record.getLevel() == Level.SEVERE)) return;
-        javafx.application.Platform.runLater( () -> textArea.appendText(getFormatter().format(record)) );
+		flush();
+		javafx.application.Platform.runLater( () -> textArea.appendText(getFormatter().format(record)) );
 	}
 
 
